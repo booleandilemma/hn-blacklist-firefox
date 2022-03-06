@@ -4,7 +4,7 @@ Tired of seeing articles from certain sources on Hacker News?
 
 HN Blacklist is for you.
 
-HN Blacklist an add-on for blocking submissions from certain sources on Hacker News.
+HN Blacklist is an add-on for blocking submissions from certain sources on Hacker News.
 
 Simply add the domains of sites you don't want to see articles from to the text box under the Options tab of the add-on.
 
