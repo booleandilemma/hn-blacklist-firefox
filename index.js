@@ -34,10 +34,10 @@
      */
     async function getDomains(text) {
         let domains = [];
-		
-		if(!text) {
-			return domains;
-		}
+        
+        if(!text) {
+            return domains;
+        }
         
         const lines = text.split("\n");
         
