@@ -1,18 +1,18 @@
 (async function() {
-    
+
     const UserScriptName = "HN Blacklist";
-    
+
     async function main() {
-        
+
         // Get the newline-delimited lines from the domains textarea.
         const text = await getFromStorage("domains");
-        
+
         const domains = await getDomains(text);
-        
+
         const blacklist = new Set(domains);
-        
+
         const topRank = getTopRank();
-        
+
         const somethingRemoved = filterSubmissions(blacklist);
 
         if (!somethingRemoved) {
@@ -26,21 +26,21 @@
 
         reindexSubmissions(topRank);
     }
-    
+
     /**
-     * Returns a list of domains from the specified text, 
+     * Returns a list of domains from the specified text,
      * filtering out comments.
      * @param {string} text - Specifies the newline-delimited list of lines.
      */
     async function getDomains(text) {
         let domains = [];
-		
-		if(!text) {
-			return domains;
-		}
-        
+
+        if(!text) {
+            return domains;
+        }
+
         const lines = text.split("\n");
-        
+
         for(let line of lines) {
             if(!line.trimStart().startsWith("#")) {
                 domains.push(line);
@@ -49,14 +49,14 @@
 
         return domains;
     }
-    
+
     /**
      * Reads from the specified key of local storage.
      * @param {string} key - Specifies the key to read from.
      */
     async function getFromStorage(key) {
         var objReturned = await browser.storage.local.get(key);
-        
+
         return objReturned[key];
     }
 
@@ -152,7 +152,7 @@
     }
 
     /**
-     * Returns the "rank" of an HN submission. The rank is defined as the 
+     * Returns the "rank" of an HN submission. The rank is defined as the
      * number to the far left of the submission.
      * @param {?object} submission - Specifies the HN submission.
      */
@@ -194,8 +194,8 @@
     }
 
     /**
-     * Returns the titleInfo of the specified submission. 
-     * This is an element containing the headline and the source 
+     * Returns the titleInfo of the specified submission.
+     * This is an element containing the headline and the source
      * of the submission.
      * @param {?object} submission - Specifies the HN submission.
      */
@@ -321,7 +321,7 @@
         let somethingRemoved = false;
 
         blacklist.forEach(entry => {
-            
+
             if(!entry.startsWith("title:")) {
                 return;
             }
@@ -344,7 +344,7 @@
                 }
             }
         });
-        
+
         return somethingRemoved;
     }
 
@@ -352,11 +352,11 @@
      * Updates the ranks of all of the remaining submissions on the current HN page.
      * This function is intended to be called after the submissions have been filtered.
      * This is because once the submissions are filtered, there is a gap in the rankings.
-     * For example, if the 3rd submission is removed, the remaining submissions will have 
+     * For example, if the 3rd submission is removed, the remaining submissions will have
      * ranks of: 1, 2, 4, 5, etc.
      * This function will correct the remaining submissions to have ranks of: 1, 2, 3, 4, etc.
      * This is accomplished by passing in the top rank on the current HN page _before_ any filtering is done.
-     * For example, if the current HN page is the first one, the top rank will be "1", 
+     * For example, if the current HN page is the first one, the top rank will be "1",
      * and so numbering will start from 1. If the current page is the second one, the top rank will be "31".
      * @param {?number} topRank - Specifies the top rank to start numbering from.
      */
@@ -372,7 +372,7 @@
     }
 
     /**
-     * Scans the list of submissions on the current HN page 
+     * Scans the list of submissions on the current HN page
      * and returns the rank of the first submission in the list.
      */
     function getTopRank() {
@@ -390,7 +390,7 @@
     function logInfo(message) {
         console.info(UserScriptName + ": " + message);
     }
-    
+
     /**
      * Logs a warning message to the console.
      * @param {string} message - Specifies the message to log.
@@ -399,6 +399,6 @@
         console.warn(UserScriptName + ": " + message);
     }
 
-    main();    
+    main();
 
 })();
