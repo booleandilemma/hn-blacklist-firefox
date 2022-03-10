@@ -295,9 +295,9 @@
 
                 logInfo("Removing " + JSON.stringify(submissionInfo));
 
-                submissionTable.deleteRow(submissionInfo.rowIndex); // Delete the submission
-                submissionTable.deleteRow(submissionInfo.rowIndex); // Delete the submission comments link
-                submissionTable.deleteRow(submissionInfo.rowIndex); // Delete the spacer row after the submission
+                submissionTable.deleteRow(submissionInfo.rowIndex); // Delete the submission.
+                submissionTable.deleteRow(submissionInfo.rowIndex); // Delete the submission comments link.
+                submissionTable.deleteRow(submissionInfo.rowIndex); // Delete the spacer row after the submission.
 
                 somethingRemoved = true;
             }
@@ -336,9 +336,9 @@
 
                     logInfo("Removing " + JSON.stringify(submissionInfo));
 
-                    submissionTable.deleteRow(submissionInfo.rowIndex); //delete the submission
-                    submissionTable.deleteRow(submissionInfo.rowIndex); //delete the submission comments link
-                    submissionTable.deleteRow(submissionInfo.rowIndex); //delete the spacer row after the submission
+                    submissionTable.deleteRow(submissionInfo.rowIndex); // Delete the submission.
+                    submissionTable.deleteRow(submissionInfo.rowIndex); // Delete the submission comments link.
+                    submissionTable.deleteRow(submissionInfo.rowIndex); // Delete the spacer row after the submission.
 
                     somethingRemoved = true;
                 }
