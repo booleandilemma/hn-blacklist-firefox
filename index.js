@@ -10,9 +10,9 @@
         const domains = await getDomains(text);
         
         const blacklist = new Set(domains);
-
+        
         const topRank = getTopRank();
-
+        
         const somethingRemoved = filterSubmissions(blacklist);
 
         if (!somethingRemoved) {
@@ -34,10 +34,10 @@
      */
     async function getDomains(text) {
         let domains = [];
-        
-        if(!text) {
-            return domains;
-        }
+		
+		if(!text) {
+			return domains;
+		}
         
         const lines = text.split("\n");
         
@@ -255,13 +255,28 @@
     }
 
     /**
-     * Filters out (i.e. deletes) all submissions on the 
-     * current HN page with a domain source contained in the specified blacklist.
-     * Returns a boolean indicating 
+     * Filters out (i.e. deletes) all submissions on the
+     * current HN page matching an entry in the specified blacklist.
+     * Returns a boolean indicating
      * whether or not at least one submission was filtered out.
      * @param {set} blacklist - A set containing the domains to filter out.
      */
-    function filterSubmissions(blacklist) {
+     function filterSubmissions(blacklist) {
+
+        let submissionFilteredBySource = filterSubmissionsBySource(blacklist);
+        let submissionFilteredByTitle = filterSubmissionsByTitle(blacklist);
+
+        return submissionFilteredBySource || submissionFilteredByTitle;
+    }
+
+    /**
+     * Filters out (i.e. deletes) all submissions on the
+     * current HN page with a domain source contained in the specified blacklist.
+     * Returns a boolean indicating
+     * whether or not at least one submission was filtered out.
+     * @param {set} blacklist - A set containing the domains to filter out.
+     */
+    function filterSubmissionsBySource(blacklist) {
         const submissions = document.querySelectorAll('.athing');
 
         const submissionTable = document.querySelectorAll('.itemlist')[0];
@@ -280,14 +295,56 @@
 
                 logInfo("Removing " + JSON.stringify(submissionInfo));
 
-                submissionTable.deleteRow(submissionInfo.rowIndex); // Delete the submission.
-                submissionTable.deleteRow(submissionInfo.rowIndex); // Delete the submission comments link.
-                submissionTable.deleteRow(submissionInfo.rowIndex); // Delete the spacer row after the submission.
+                submissionTable.deleteRow(submissionInfo.rowIndex); // Delete the submission
+                submissionTable.deleteRow(submissionInfo.rowIndex); // Delete the submission comments link
+                submissionTable.deleteRow(submissionInfo.rowIndex); // Delete the spacer row after the submission
 
                 somethingRemoved = true;
             }
         }
 
+        return somethingRemoved;
+    }
+
+    /**
+     * Filters out (i.e. deletes) all submissions on the
+     * current HN page with a title substring contained in the specified blacklist.
+     * Returns a boolean indicating
+     * whether or not at least one submission was filtered out.
+     * @param {set} blacklist - A set containing the title substrings to filter out.
+     */
+    function filterSubmissionsByTitle(blacklist) {
+        const submissions = document.querySelectorAll('.athing');
+
+        const submissionTable = document.querySelectorAll('.itemlist')[0];
+
+        let somethingRemoved = false;
+
+        blacklist.forEach(entry => {
+            
+            if(!entry.startsWith("title:")) {
+                return;
+            }
+
+            const filter = entry.substring(entry.indexOf("title:") + "title:".length).toLowerCase();
+
+            for (let j = 0; j < submissions.length; j++) {
+
+                const submissionInfo = getSubmissionInfo(submissions[j]);
+
+                if (submissionInfo.title.toLowerCase().includes(filter)) {
+
+                    logInfo("Removing " + JSON.stringify(submissionInfo));
+
+                    submissionTable.deleteRow(submissionInfo.rowIndex); //delete the submission
+                    submissionTable.deleteRow(submissionInfo.rowIndex); //delete the submission comments link
+                    submissionTable.deleteRow(submissionInfo.rowIndex); //delete the spacer row after the submission
+
+                    somethingRemoved = true;
+                }
+            }
+        });
+        
         return somethingRemoved;
     }
 
